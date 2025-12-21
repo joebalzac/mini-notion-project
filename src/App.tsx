@@ -1,4 +1,3 @@
-import './App.css';
 import { NotesInput } from './components/NotesInput';
 
 function App() {

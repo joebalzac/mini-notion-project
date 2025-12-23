@@ -3,6 +3,7 @@ import { SearchBar } from './SearchBar';
 
 interface Note {
   title: string;
+  content: string;
   id: number;
   tags: string[];
 }
@@ -10,6 +11,8 @@ interface Note {
 export const NotesInput = () => {
   const [notes, setNotes] = useState<Note[]>([]);
   const [newNote, setNewNote] = useState('');
+  const [newContent, setNewContent] = useState('');
+  const [editingContent, setEditingContent] = useState('');
   const [editingNote, setEditingNote] = useState('');
   const [editingId, setEditingId] = useState<number | null>(null);
   const [tags, setTags] = useState<string[]>(['home', 'work', 'school']);
@@ -21,13 +24,15 @@ export const NotesInput = () => {
     if (!newNote.trim()) return null;
 
     const addNewNote: Note = {
-      title: newNote.trim(),
       id: Date.now() + Math.floor(Math.random() * 1000),
+      title: newNote.trim(),
+      content: newContent.trim(),
       tags: newTag ? [newTag] : ['home'],
     };
 
     setNotes([...notes, addNewNote]);
     setTags([...tags, newTag]);
+    setNewContent('');
     setNewNote('');
   };
 
@@ -41,13 +46,19 @@ export const NotesInput = () => {
   };
 
   const handleSaveNote = () => {
-    if (editingId !== null && editingNote.trim() && editingTag !== null) {
+    if (
+      editingId !== null &&
+      editingNote.trim() &&
+      editingTag !== null &&
+      editingContent !== null
+    ) {
       setNotes(
         notes.map((note) =>
           note.id === editingId
             ? {
                 ...note,
                 title: editingNote,
+                content: editingContent,
                 tags: editingTag ? [editingTag] : note.tags,
               }
             : note
@@ -75,6 +86,12 @@ export const NotesInput = () => {
           onChange={(e) => setNewNote(e.target.value)}
           className="border border-gray-300 rounded-md"
         />
+        <textarea
+          name=""
+          id=""
+          value={newContent}
+          onChange={(e) => setNewContent(e.target.value)}
+        ></textarea>
 
         <button
           className="bg-gray-200 text-gray-900 p-2 rounded-md"
@@ -105,6 +122,12 @@ export const NotesInput = () => {
                   value={editingNote}
                   onChange={(e) => setEditingNote(e.target.value)}
                 />
+                <textarea
+                  name=""
+                  id=""
+                  value={editingContent}
+                  onChange={(e) => setEditingContent(e.target.value)}
+                ></textarea>
                 <select
                   value={editingTag}
                   name=""
@@ -122,6 +145,9 @@ export const NotesInput = () => {
               <div>
                 <div key={note.id} className="flex items-center gap-2">
                   <h2 className="text-2xl font-bold">{note.title}</h2>
+                  <textarea name="" id="">
+                    {note.content}
+                  </textarea>
                   <span className="">
                     {note.tags.map((tag) => (
                       <div className="bg-blue-200 text-gray-900 px-3  rounded-full text-center">

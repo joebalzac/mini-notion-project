@@ -15,6 +15,8 @@ export const NotesInput = () => {
   const [newTag, setNewTag] = useState<string>('');
   const [editingTag, setEditingTag] = useState('');
 
+  const [search, setSearch] = useState('');
+
   const handleAddNote = () => {
     if (!newNote.trim()) return null;
 
@@ -55,9 +57,22 @@ export const NotesInput = () => {
     setEditingId(null);
   };
 
+  const filteredNotes = notes.filter(
+    (note) =>
+      note.title.toLowerCase().includes(search.toLowerCase()) ||
+      tags.some((tag) => tag.toLowerCase().includes(search.toLowerCase())) ||
+      search.toLowerCase() === ''
+  );
+
   return (
     <div>
       <h1 className="text-5xl pb-4"> Add Notes </h1>
+      <input
+        type="text"
+        placeholder="Search Notes..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
       <div className="flex flex-col gap-4 mb-16">
         <input
           type="text"
@@ -86,7 +101,7 @@ export const NotesInput = () => {
         </select>
       </div>
       <div>
-        {notes.map((note) => (
+        {filteredNotes.map((note) => (
           <div>
             {editingId === note.id ? (
               <div>

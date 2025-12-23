@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { SearchBar } from './SearchBar';
 
 interface Note {
   title: string;
@@ -14,7 +15,6 @@ export const NotesInput = () => {
   const [tags, setTags] = useState<string[]>(['home', 'work', 'school']);
   const [newTag, setNewTag] = useState<string>('');
   const [editingTag, setEditingTag] = useState('');
-
   const [search, setSearch] = useState('');
 
   const handleAddNote = () => {
@@ -67,12 +67,7 @@ export const NotesInput = () => {
   return (
     <div>
       <h1 className="text-5xl pb-4"> Add Notes </h1>
-      <input
-        type="text"
-        placeholder="Search Notes..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
+      <SearchBar search={search} setSearch={setSearch} />
       <div className="flex flex-col gap-4 mb-16">
         <input
           type="text"

@@ -7,6 +7,7 @@ interface Note {
   content: string;
   id: number;
   tags: string[];
+  favorite: boolean;
 }
 
 export const NotesInput = () => {
@@ -16,7 +17,6 @@ export const NotesInput = () => {
   const [editingContent, setEditingContent] = useState('');
   const [editingNote, setEditingNote] = useState('');
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [favoriteNote, setFavoriteNote] = useState<Note | null>(null);
   const [tags, setTags] = useState<string[]>(['home', 'work', 'school']);
   const [newTag, setNewTag] = useState<string>('');
   const [editingTag, setEditingTag] = useState('');
@@ -30,6 +30,7 @@ export const NotesInput = () => {
       title: newNote.trim(),
       content: newContent.trim(),
       tags: newTag ? [newTag] : ['home'],
+      favorite: false,
     };
 
     setNotes([...notes, addNewNote]);
@@ -77,8 +78,10 @@ export const NotesInput = () => {
       search.toLowerCase() === ''
   );
 
-  const handleSelectFavorite = (note: Note) => {
-    setFavoriteNote(note);
+  const handleToggleFavorite = (note: Note) => {
+    setNotes(
+      notes.map((n) => (n.id === note.id ? { ...n, favorite: !n.favorite } : n))
+    );
   };
 
   return (
@@ -175,11 +178,9 @@ export const NotesInput = () => {
                   </button>
                   <FaRegHeart
                     className={`cursor-pointer ${
-                      favoriteNote?.id === note.id
-                        ? 'text-red-500'
-                        : 'text-gray-900'
+                      note?.favorite === true ? 'text-red-500' : 'text-gray-900'
                     }`}
-                    onClick={() => handleSelectFavorite(note)}
+                    onClick={() => handleToggleFavorite(note)}
                   />
                 </div>
               </div>
@@ -188,7 +189,11 @@ export const NotesInput = () => {
         ))}
       </div>
       <h3>Favorite Notes</h3>
-      {favoriteNote && <div>{favoriteNote.title}</div>}
+      {filteredNotes
+        .filter((note) => note.favorite)
+        .map((note) => (
+          <div key={note.id}>{note.title}</div>
+        ))}
     </div>
   );
 };

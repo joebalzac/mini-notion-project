@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { SearchBar } from './SearchBar';
+import { FaRegHeart } from 'react-icons/fa';
 
 interface Note {
   title: string;
@@ -15,6 +16,7 @@ export const NotesInput = () => {
   const [editingContent, setEditingContent] = useState('');
   const [editingNote, setEditingNote] = useState('');
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [favoriteNote, setFavoriteNote] = useState<Note | null>(null);
   const [tags, setTags] = useState<string[]>(['home', 'work', 'school']);
   const [newTag, setNewTag] = useState<string>('');
   const [editingTag, setEditingTag] = useState('');
@@ -74,6 +76,10 @@ export const NotesInput = () => {
       tags.some((tag) => tag.toLowerCase().includes(search.toLowerCase())) ||
       search.toLowerCase() === ''
   );
+
+  const handleSelectFavorite = (note: Note) => {
+    setFavoriteNote(note);
+  };
 
   return (
     <div>
@@ -167,12 +173,22 @@ export const NotesInput = () => {
                   >
                     Edit
                   </button>
+                  <FaRegHeart
+                    className={`cursor-pointer ${
+                      favoriteNote?.id === note.id
+                        ? 'text-red-500'
+                        : 'text-gray-900'
+                    }`}
+                    onClick={() => handleSelectFavorite(note)}
+                  />
                 </div>
               </div>
             )}
           </div>
         ))}
       </div>
+      <h3>Favorite Notes</h3>
+      {favoriteNote && <div>{favoriteNote.title}</div>}
     </div>
   );
 };
